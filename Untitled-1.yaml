@@ -1,0 +1,37 @@
+version: '3'
+services: 
+   node-web-app:
+    build: .
+    ports:
+      - "3000:8080"
+    networks:
+        my-network:
+          aliases:
+          - s222472055/node-web-app
+    healthcheck:
+      test: curl --fail /Hello from first Container || exit 1
+      interval: 60s
+      timeout: 60s
+      retries: 3
+   container2:
+    image: s222472055/node-web-app-two
+    command: sh -c "echo 'Hello from second container' && server.js"
+    expose:
+        - "3000:8080"
+    networks: 
+          my-network:
+            aliases:
+              - container2
+    healthcheck:
+      test: curl --fail /Hello from first container || exit 1
+      interval: 60s
+      timeout: 60s
+      retries: 3
+networks:
+  my-network:
+    driver: bridge
+
+
+
+
+     
